@@ -1,0 +1,16 @@
+# add some jobs
+curl -i -H "Content-Type: application/json" -X POST -d '{"type": "text", "url": "https://www-eng-x.llnl.gov/documents/tests/html.html"}' http://localhost:8080/api/v1/job
+curl -i -H "Content-Type: application/json" -X POST -d '{"type": "images", "url": "https://www-eng-x.llnl.gov/documents/tests/html.html"}' http://localhost:8080/api/v1/job
+curl -i -H "Content-Type: application/json" -X POST -d '{"type": "text", "url": "https://www.computerhope.com/jargon/w/website.htm"}' http://localhost:8080/api/v1/job
+curl -i -H "Content-Type: application/json" -X POST -d '{"type": "images", "url": "https://www.computerhope.com/jargon/w/website.htm"}' http://localhost:8080/api/v1/job
+curl -i -H "Content-Type: application/json" -X POST -d '{"type": "text", "url": "http://www.northlight-images.co.uk/printer-test-images"}' http://localhost:8080/api/v1/job
+curl -i -H "Content-Type: application/json" -X POST -d '{"type": "images", "url": "http://www.northlight-images.co.uk/printer-test-images"}' http://localhost:8080/api/v1/job
+
+# md5('images' + 'http://www.northlight-images.co.uk/printer-test-images') = ba534e0a8a37a9373851ee8e3653e5a4
+
+# keep checking status until it switches from 'pending' to 'done'
+curl -i -H "Content-Type: application/json" -X GET http://localhost:8080/api/v1/job/ba534e0a8a37a9373851ee8e3653e5a4
+
+# when status is 'done' get images
+
+curl -i -H "Content-Type: application/json" -X GET http://localhost:8080/api/v1/job/ba534e0a8a37a9373851ee8e3653e5a4/resources

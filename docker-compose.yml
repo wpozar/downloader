@@ -1,0 +1,55 @@
+version: '3'
+
+services:
+
+  redis:
+    build:
+      context: "./redis"
+    volumes:
+      - "redis-data:/data"
+
+  rq-dashboard:
+    build:
+      context: "./rq-dashboard"
+    environment:
+      RQ_DASHBOARD_REDIS_URL: "redis://redis:6379/0"
+      RQ_DASHBOARD_INTERVAL: 10000
+    ports:
+      - "8081:9181"
+    depends_on:
+      - "redis"
+
+  rq-worker:
+    build:
+      context: "./rq-worker"
+    environment:
+      REDIS_URL: "redis://redis:6379/0"
+    volumes:
+      - "download-data:/data"
+    depends_on:
+      - "redis"
+
+  flask-app:
+    build:
+      context: "./flask-app"
+    environment:
+      FLASK_ENV: "development"
+      FLASK_DEBUG: "True"
+      FLASK_TESTING: "False"
+      FLASK_REDIS_URL: "redis://redis:6379/0"
+    volumes:
+      - "download-data:/data"
+    depends_on:
+      - "redis"
+
+  nginx:
+    build:
+      context: "./nginx"
+    ports:
+      - "8080:80"
+    depends_on:
+      - "flask-app"
+
+volumes:
+  redis-data:
+  download-data:

@@ -1,0 +1,3 @@
+redis<3.0
+rq>=0.12.0
+beautifulsoup4>=4.6.3
